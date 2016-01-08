@@ -31,6 +31,13 @@ def help():
 	HELP
 ==========================
 	
+	- Torli egyesevel a letrehozott file-okat, valamint a bizonyos bejegyzeseket a file-okbol.
+	- Amiket töröl: 
+		- input; - changelog; - domain; - repository; - resource; - entities; - navBar; - resourceTest; - json; - references; - index;
+	- Egyesvel kell megadni neki a letrehozott etity-k neveit, es ha minden megvan, tolri az osszeset
+	- BasePath: "D:\Bence\Code\JHipster\BaseApp\\" - Bekéri az eléri utat de alapból ezt használja
+	- 
+	
 '''
 
 def printOK():
@@ -197,7 +204,7 @@ def entities():
 			    if exists(deleteF):
 					shutil.rmtree(deleteF);
 					if exists(deleteF) == False:
-						print file + ': AppEntities torolve!'
+						print file + ': AppEntities Torolve!'
 						
 	fileList = [name for name in os.listdir(BasePath+ComponentEntities) if name.endswith("")];
 	
@@ -212,7 +219,7 @@ def entities():
 			    if exists(deleteF):
 					shutil.rmtree(deleteF);
 					if exists(deleteF) == False:
-						print file + ': ComponentEntities torolve!'
+						print file + ': ComponentEntities Torolve!'
 	
 	printOK()
 
@@ -240,12 +247,12 @@ def navBar():
 			regex = regexPRE+".*("+entity+").*";
 			matchObj = re.match(regex, line);
 			if matchObj:
-				print line+" torolve!";
+				print line+" Torolve!";
 				textList[textList.index(line)] = "";
 			regex2 = regexPRE2+".*("+entity+").*";
 			matchObj = re.match(regex2, line);
 			if matchObj:
-				print line+" torolve!";
+				print line+" Torolve!";
 				textList[textList.index(line)] = "";
 				
 	fileOpen = open(filePathName, 'w');
@@ -321,6 +328,7 @@ def references():
 		matchObj = re.match(regex, line);
 		if matchObj:
 			textList[textList.index(line)] = "";
+			print file+": Torolve!";
 	
 	fileOpen.close();
 
@@ -360,6 +368,7 @@ def index():
 			matchObj = re.match(regex, line);
 			if matchObj:
 				textList[textList.index(line)] = "";
+				print file+": Torolve!";
 
 	fileOpen = open(filePathName, 'w');
 	
