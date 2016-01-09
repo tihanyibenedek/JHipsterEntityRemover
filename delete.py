@@ -65,7 +65,7 @@ def input():
 		param = "";
 		param = raw_input("\nVan torlendo tabla? (y/n): ")
 		if (param is "y"):
-			tables = raw_input("\nAdd meg a table nevet: ")
+			tables = raw_input("\nAdd meg a table nevet (nagykezdobetuvel): ")
 			list.extend ([tables]);
 			tables = "";
 		elif (param is "n"):
@@ -328,7 +328,7 @@ def references():
 		matchObj = re.match(regex, line);
 		if matchObj:
 			textList[textList.index(line)] = "";
-			print file+": Torolve!";
+			print line + ": Torolve!";
 	
 	fileOpen.close();
 
@@ -368,7 +368,7 @@ def index():
 			matchObj = re.match(regex, line);
 			if matchObj:
 				textList[textList.index(line)] = "";
-				print file+": Torolve!";
+				print line + ": Torolve!";
 
 	fileOpen = open(filePathName, 'w');
 	
