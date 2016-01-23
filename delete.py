@@ -21,6 +21,8 @@ AppEntities = "src\main\webapp\scripts\\app\entities\\";
 ComponentEntities = "src\main\webapp\scripts\components\entities\\";
 NavBar = "src\main\webapp\scripts\components\\navbar\\";
 ResourceTest = "src\\test\java\com\ebentih\web\\rest\\";
+OtherTest = "src\\test\javascript\spec\\app\entities\\";
+GatlingTest = "src\\test\gatling\simulations\\";
 Json = ".jhipster\\";
 References = "src\main\\resources\config\liquibase\\";
 Index = "src\main\webapp\\";
@@ -48,7 +50,7 @@ def input():
 	global LIST;
 	val = 1;
 	param = "";
-	list = [];
+	array = [];
 	
 	while val:
 		pPath = raw_input("\nAdd meg az eleresi utat: ")
@@ -59,18 +61,27 @@ def input():
 			
 	PROJECT_PATH = pPath;
 			
-	val = 1;			
+	val = 1;
+	ref = 1;
 	
 	while val:
 		param = "";
 		param = raw_input("\nVan torlendo tabla? (y/n): ")
 		if (param is "y"):
-			tables = raw_input("\nAdd meg a table nevet (nagykezdobetuvel): ")
-			list.extend ([tables]);
+			while ref:
+				tables = "";
+				tables = raw_input("\nAdd meg a table nevet: ");
+				listE = list(tables);
+				if (listE[0].isupper()):
+					ref = 0;
+				else:
+					print "Nagybetuvel kell kezdodnie!!"
+			array.extend ([tables]);
+			ref = 1;
 			tables = "";
 		elif (param is "n"):
 			val = 0;
-			LIST = list;
+			LIST = array;
 		else:
 			print "\nWrong parameter!"
 
@@ -153,7 +164,7 @@ def repository():
 					if (exists(deleteF) == False):
 						print file+": Torolve!";
 					
-	printOK()
+	printOK();
 	
 	
 def resource():
@@ -286,6 +297,49 @@ def resourceTest():
 
 	
 	printOK()
+
+
+def otherTest():
+	print "Delete OtherTest \n"
+	
+	global LIST;
+	global BasePath;
+	global OtherTest;
+	
+	fileList = [name for name in os.listdir(BasePath+OtherTest) if name.endswith("")];
+	
+	for entity in LIST:
+		for file in fileList:
+			listE = list(entity);
+			listE[0] = listE[0].lower();
+			entity = "".join(listE);
+			matchObj = re.match(entity, file);
+			if matchObj:
+			    deleteF = BasePath + OtherTest + file;
+			    if exists(deleteF):
+					shutil.rmtree(deleteF);
+					if exists(deleteF) == False:
+						print file + ': Test Torolve!'
+	
+	print "\nDelete Gatling Test \n"
+	
+	global GatlingTest;
+	
+	expansion = "GatlingTest.scala";
+	
+	fileList = [name for name in os.listdir(BasePath+GatlingTest) if name.endswith(expansion)];
+	
+	for entity in LIST:
+		for file in fileList:
+			matchObj = re.match(entity, file)
+			if matchObj:
+				deleteF = BasePath + GatlingTest + file
+				if exists(deleteF):
+					os.remove(deleteF)
+					if exists(deleteF) == False:
+						print file + ': Gatling Test Torolve!'
+	
+	printOK()
 	
 	
 def json():
@@ -398,6 +452,8 @@ if __name__=="__main__":
 	navBar()
 
 	resourceTest()
+	
+	otherTest()
 
 	json()
 
