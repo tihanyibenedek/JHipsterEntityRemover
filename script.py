@@ -17,16 +17,17 @@ import mysql.connector
 from datetime import date, datetime, timedelta
 
 Cars = [
-	('Citroen', 'LRG - 342', 210, 1200000, date(2010, 06, 14)),
-	('Volvo', 'JLB - 619', 230, 2300000, date(2007, 01, 04)),
-	('Opel', 'JXF - 600', 180, 1700000, date(2000, 05, 24)),
-	('Skoda', 'HNL - 317', 130, 1100000, date(1995, 06, 11)),
-	('Lada', 'KKD - 006', 90, 500000, date(1980, 11, 20)),
-	('Mitsubisi', 'NNL - 003', 230, 1500000, date(2001, 02, 19)),
-	('Honda', 'HIW - 288', 115, 2100000, date(2003, 07, 11)),
-	('Jaguar', 'HRB - 834', 280, 12400000, date(2014, 03, 8)),
-	('Vokswagen', 'VSZ - 422', 250, 5500000, date(2011, 8, 24)),
-	('Suzuki', 'JZG - 853', 120, 900000, date(2000, 02, 19)),
+	# ('Citroen', 'LRG - 342', 210, 1200000, date(2010, 06, 14)),
+	('Citroen', 'LRG - 342', 210, 1200000),
+	('Volvo', 'JLB - 619', 230, 2300000),
+	('Opel', 'JXF - 600', 180, 1700000),
+	('Skoda', 'HNL - 317', 130, 1100000),
+	('Lada', 'KKD - 006', 90, 500000),
+	('Mitsubisi', 'NNL - 003', 230, 1500000),
+	('Honda', 'HIW - 288', 115, 2100000),
+	('Jaguar', 'HRB - 834', 280, 12400000),
+	('Vokswagen', 'VSZ - 422', 250, 5500000),
+	('Suzuki', 'JZG - 853', 120, 900000),
 	];
 	
 Telephones = [
@@ -72,28 +73,54 @@ def printOK():
 	print '\t\033[32m[OK]\033[32m\033[39m\n'
 
 def insertCar(cnx):
-	print "Car insert\n"
+    print "Car insert\n"
 	
-	add_car = ("INSERT INTO car "
-	   "(type, reg_number, max_speed, price, create_date) "
+    person_id = cursor.execute("SELECT id FROM baseapp.person");
+    person_id = cursor.fetchall();
+    person_id = list(person_id);
+	
+    add_car = ("INSERT INTO car "
+	   "(type, reg_number, max_speed, price, person_id) "
 	   "VALUES (%s, %s, %s, %s, %s)");
+	   
+    for x in range(0, 10):
+	    rndPerson = random.randrange(0, len(person_id));
+	    rndPerson = person_id[rndPerson];
+	    person_id.remove(rndPerson);
+	    rndPerson = rndPerson[0];
+		
+	    carList = Cars[x];
+	    carList = list(carList);
+	    carList.extend([rndPerson]);
+	    
+	    cursor.execute(add_car, carList);
 	
-	for x in range(0, 9):
-	    cursor.execute(add_car, Cars[x]);
-	
-	printOK();
+    printOK();
 
 def insertTelephone(cnx):
-	print "Telephone insert\n"
+    print "Telephone insert\n"
 	
-	add_telephone = ("INSERT INTO telephone "
-	   "(type, number, price) "
-	   "VALUES (%s, %s, %s)");
+    person_id = cursor.execute("SELECT id FROM baseapp.person");
+    person_id = cursor.fetchall();
+    person_id = list(person_id);
+	
+    add_telephone = ("INSERT INTO telephone "
+	   "(type, number, price, person_id) "
+	   "VALUES (%s, %s, %s, %s)");
 	  
-	for x in range(0, 9):
-	    cursor.execute(add_telephone, Telephones[x]);
-	
-	printOK();
+    for x in range(0, 10):
+	    rndPerson = random.randrange(0, len(person_id));
+	    rndPerson = person_id[rndPerson];
+	    person_id.remove(rndPerson);
+	    rndPerson = rndPerson[0];
+	    
+	    telephoneList = Telephones[x];
+	    telephoneList = list(telephoneList);
+	    telephoneList.extend([rndPerson]);
+	    
+	    cursor.execute(add_telephone, telephoneList);
+	    
+    printOK();
 
 def insertWorkPlace(cnx):
 	print "WrokPlace insert\n"
@@ -102,7 +129,7 @@ def insertWorkPlace(cnx):
 	   "(name, address, phone) "
 	   "VALUES (%s, %s, %s)");
 	   
-	for x in range(0, 9):
+	for x in range(0, 10):
 	    cursor.execute(add_workPlace, WorkPlaces[x]);
 	
 	printOK();
@@ -136,6 +163,7 @@ def insertPersonWorkPlace(cnx):
 	    # print "hello";
 	    rndWork = random.randrange(0, len(workPlaces));
 	    rndWork = workPlaces[rndWork];
+	    workPlaces.remove(rndWork);
 	    rndWork = rndWork[0];
 	    person = personList[x];
 	    person = person[0];
@@ -153,29 +181,31 @@ def insertPerson(cnx):
     car_id = cursor.execute("SELECT id FROM baseapp.car");
     car_id = cursor.fetchall();
     car_id = list(car_id);
-    print car_id;
+    # print car_id;
     telephone_id = cursor.execute('SELECT id FROM baseapp.telephone');
     telephone_id = cursor.fetchall();
     telephone_id = list(telephone_id);
-    print telephone_id;
+    # print telephone_id;
 	
     add_person = ("INSERT INTO person "
-	   "(name, gender, birth_date, e_mail, address, state, car_id, telephone_id) "
-	   "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)");
+	   "(name, gender, birth_date, e_mail, address, state) "
+	   "VALUES (%s, %s, %s, %s, %s, %s)");
 	
-    # for x in range(0, 9):
+    for x in range(0, 10):
 	    # rndCar = random.randrange(0, len(car_id));
 	    # rndCar = car_id[rndCar];
+	    # car_id.remove(rndCar);
 	    # rndCar = rndCar[0];
 	    # rndTelephone = random.randrange(0, len(telephone_id));
 	    # rndTelephone = telephone_id[rndTelephone];
+	    # telephone_id.remove(rndTelephone);
 	    # rndTelephone = rndTelephone[0];
 		
-	    # personList = Persons[x];
-	    # personList = list(personList);
+	    personList = Persons[x];
+	    personList = list(personList);
 	    # personList.extend([rndCar, rndTelephone]);
 		
-	    # cursor.execute(add_person, personList);
+	    cursor.execute(add_person, personList);
 	
     printOK();
 	
@@ -195,11 +225,11 @@ if __name__=="__main__":
     cnx.autocommit = True;
     cursor = cnx.cursor(buffered=True);
 
+    # insertPerson(cnx);
+    
     # insertCar(cnx);
 	
     # insertTelephone(cnx);
-	
-    # insertPerson(cnx);
 	
     # insertWorkPlace(cnx);
 	
