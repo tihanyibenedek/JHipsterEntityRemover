@@ -1,15 +1,12 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# import subprocess
 import re
 import os
 import os.path
-# import sys
-# import time
-# import glob
 from os.path import exists
-import shutil
+import delete_functions
+import logging
 
 PROJECT_PATH = ""
 LIST = []
@@ -50,6 +47,7 @@ def print_ok():
 
 
 def input_func():
+
     global PROJECT_PATH
     global LIST
     val = 1
@@ -96,8 +94,7 @@ def changelog():
     expansion = ".xml"
     regex = ".*(initial_schema).*"
 
-    # subprocess.Popen(r'explorer /select,BasePath')
-    file_list = [name for name in os.listdir(BasePath+Changelog) if name.endswith(expansion)]
+    file_list = [name for name in os.listdir(BasePath + Changelog) if name.endswith(expansion)]
 
     for f in file_list:
         match_obj = re.match(regex, f)
@@ -109,7 +106,7 @@ def changelog():
         if exists(delete_f):
             os.remove(delete_f)
             if not exists(delete_f):
-                print f+": Torolve!"
+                print f+": Deleted!"
 
     # os.remove() will remove a f.
     # os.rmdir() will remove an empty directory.
@@ -123,23 +120,10 @@ def changelog():
 def domain():
     print "Delete Domain \n"
 
-    global LIST
-    global BasePath
-    global Domain
-
-    expansion = ".java"
-
-    file_list = [name for name in os.listdir(BasePath+Domain) if name.endswith(expansion)]
-
-    for entity in LIST:
-        for file_l in file_list:
-            match_obj = re.match(entity, file_l)
-            if match_obj:
-                delete_f = BasePath+Domain+file_l
-                if exists(delete_f):
-                    os.remove(delete_f)
-                    if not exists(delete_f):
-                        print file_l+": Torolve!"
+    if delete_functions.delete_selected_item(LIST, Domain, ".java"):
+        logging.info("Domain is deleted!")
+    else:
+        logging.info("Something went wrong!")
 
     print_ok()
 
@@ -147,23 +131,10 @@ def domain():
 def repository():
     print "Delete Repository \n"
 
-    global LIST
-    global BasePath
-    global Repository
-
-    expansion = ".java"
-
-    file_list = [name for name in os.listdir(BasePath+Repository) if name.endswith(expansion)]
-
-    for entity in LIST:
-        for f in file_list:
-            match_obj = re.match(entity, f)
-            if match_obj:
-                felete_f = BasePath+Repository+f
-                if exists(felete_f):
-                    os.remove(felete_f)
-                    if not exists(felete_f):
-                        print f+": Torolve!"
+    if delete_functions.delete_selected_item(LIST, Repository, ".java"):
+        logging.info("Repository is deleted!")
+    else:
+        logging.info("Something went wrong!")
 
     print_ok()
 
@@ -171,23 +142,10 @@ def repository():
 def resource():
     print "Delete Resource \n"
 
-    global LIST
-    global BasePath
-    global Resource
-
-    expansion = ".java"
-
-    file_list = [name for name in os.listdir(BasePath+Resource) if name.endswith(expansion)]
-
-    for entity in LIST:
-        for f in file_list:
-            match_obj = re.match(entity, f)
-            if match_obj:
-                felete_f = BasePath + Resource + f
-                if exists(felete_f):
-                    os.remove(felete_f)
-                    if not exists(felete_f):
-                        print f + ': Torolve!'
+    if delete_functions.delete_selected_item(LIST, Resource, ".java"):
+        logging.info("Resource is deleted!")
+    else:
+        logging.info("Something went wrong!")
 
     print_ok()
 
@@ -195,43 +153,15 @@ def resource():
 def entities():
     print "Delete Entities \n"
 
-    global LIST
-    global BasePath
-    global AppEntities
-    global ComponentEntities
+    if delete_functions.delete_selected_item_with_lower(LIST, AppEntities, ""):
+        logging.info("AppEntities is deleted!")
+    else:
+        logging.info("Something went wrong!")
 
-    file_list = [name for name in os.listdir(BasePath+AppEntities) if name.endswith("")]
-
-    # print upper.upper()
-    # print lower.lower()
-
-    for entity in LIST:
-        for f in file_list:
-            list_e = list(entity)
-            list_e[0] = list_e[0].lower()
-            entity = "".join(list_e)
-            match_obj = re.match(entity, f)
-            if match_obj:
-                felete_f = BasePath + AppEntities + f
-                if exists(felete_f):
-                    shutil.rmtree(felete_f)
-                    if not exists(felete_f):
-                        print f + ': AppEntities Torolve!'
-
-    file_list = [name for name in os.listdir(BasePath+ComponentEntities) if name.endswith("")]
-
-    for entity in LIST:
-        for f in file_list:
-            list_e = list(entity)
-            list_e[0] = list_e[0].lower()
-            entity = "".join(list_e)
-            match_obj = re.match(entity, f)
-            if match_obj:
-                felete_f = BasePath + ComponentEntities + f
-                if exists(felete_f):
-                    shutil.rmtree(felete_f)
-                    if not exists(felete_f):
-                        print f + ': ComponentEntities Torolve!'
+    if delete_functions.delete_selected_item_with_lower(LIST, ComponentEntities, ""):
+        logging.info("ComponentEntities is deleted!")
+    else:
+        logging.info("Something went wrong!")
 
     print_ok()
 
@@ -244,7 +174,7 @@ def nav_bar():
     global NavBar
 
     file_name = 'navbar.html'
-    file_path_name = BasePath+NavBar+file_name
+    file_path_name = BasePath + NavBar + file_name
     regex_pre = ".*(ui-sref-active).*"
     regex_pre2 = ".*(<span >).*"
 
@@ -260,12 +190,12 @@ def nav_bar():
             regex = regex_pre+".*("+entity+").*"
             match_obj = re.match(regex, line)
             if match_obj:
-                print line+" Torolve!"
+                print line+" Deleted!"
                 text_list[text_list.index(line)] = ""
             regex2 = regex_pre2+".*("+entity+").*"
             match_obj = re.match(regex2, line)
             if match_obj:
-                print line+" Torolve!"
+                print line+" Deleted!"
                 text_list[text_list.index(line)] = ""
 
     file_open = open(file_path_name, 'w')
@@ -281,21 +211,10 @@ def nav_bar():
 def resource_test():
     print "Delete ResourceTest \n"
 
-    global LIST
-    global BasePath
-    global ResourceTest
-
-    file_list = [name for name in os.listdir(BasePath+ResourceTest) if name.endswith("")]
-
-    for entity in LIST:
-        for f in file_list:
-            match_obj = re.match(entity, f)
-            if match_obj:
-                felete_f = BasePath + ResourceTest + f
-                if exists(felete_f):
-                    os.remove(felete_f)
-                    if not exists(felete_f):
-                        print f+": Torolve!"
+    if delete_functions.delete_selected_item(LIST, ResourceTest, ""):
+        logging.info("ResourceTest is deleted!")
+    else:
+        logging.info("Something went wrong!")
 
     print_ok()
 
@@ -303,42 +222,17 @@ def resource_test():
 def other_test():
     print "Delete OtherTest \n"
 
-    global LIST
-    global BasePath
-    global OtherTest
-
-    file_list = [name for name in os.listdir(BasePath+OtherTest) if name.endswith("")]
-
-    for entity in LIST:
-        for f in file_list:
-            list_e = list(entity)
-            list_e[0] = list_e[0].lower()
-            entity = "".join(list_e)
-            match_obj = re.match(entity, f)
-            if match_obj:
-                felete_f = BasePath + OtherTest + f
-                if exists(felete_f):
-                    shutil.rmtree(felete_f)
-                    if not exists(felete_f):
-                        print f + ': Test Torolve!'
+    if delete_functions.delete_selected_item_with_lower(LIST, OtherTest, ""):
+        logging.info("OtherTest is deleted!")
+    else:
+        logging.info("Something went wrong!")
 
     print "\nDelete Gatling Test \n"
 
-    global GatlingTest
-
-    expansion = "GatlingTest.scala"
-
-    file_list = [name for name in os.listdir(BasePath+GatlingTest) if name.endswith(expansion)]
-
-    for entity in LIST:
-        for f in file_list:
-            match_obj = re.match(entity, f)
-            if match_obj:
-                felete_f = BasePath + GatlingTest + f
-                if exists(felete_f):
-                    os.remove(felete_f)
-                    if not exists(felete_f):
-                        print f + ': Gatling Test Torolve!'
+    if delete_functions.delete_selected_item(LIST, GatlingTest, "GatlingTest.scala"):
+        logging.info("GatlingTest is deleted!")
+    else:
+        logging.info("Something went wrong!")
 
     print_ok()
 
@@ -346,21 +240,10 @@ def other_test():
 def json():
     print "Delete Json \n"
 
-    global LIST
-    global BasePath
-    global Json
-
-    file_list = [name for name in os.listdir(BasePath+Json) if name.endswith("")]
-
-    for entity in LIST:
-        for f in file_list:
-            match_obj = re.match(entity, f)
-            if match_obj:
-                felete_f = BasePath + Json + f
-                if exists(felete_f):
-                    os.remove(felete_f)
-                    if not exists(felete_f):
-                        print f+": Torolve!"
+    if delete_functions.delete_selected_item(LIST, Json, ""):
+        logging.info("Json is deleted!")
+    else:
+        logging.info("Something went wrong!")
 
     print_ok()
 
@@ -383,7 +266,7 @@ def references():
         match_obj = re.match(regex, line)
         if match_obj:
             text_list[text_list.index(line)] = ""
-            print line + ": Torolve!"
+            print line + ": Deleted!"
 
     file_open.close()
 
@@ -422,7 +305,7 @@ def index():
             match_obj = re.match(regex, line)
             if match_obj:
                 text_list[text_list.index(line)] = ""
-                print line + ": Torolve!"
+                print line + ": Deleted!"
 
     file_open = open(file_path_name, 'w')
 
